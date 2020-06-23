@@ -15,8 +15,12 @@ typedef struct {
     char position[MAX_LEN];
     char name[MAX_LEN];
     char now[MAX_LEN];
-    char* tasklist;
+    char** tasklist;
 }TASK;
+typedef struct {
+    char now_team[MAX_LEN];
+    char now_list[MAX_LEN];
+}TEAMLIST;
 int main() {
     int i, ix, current_i;
     int a1, a2, a3, a4;
@@ -105,7 +109,7 @@ int main() {
                         else if (a3 == 2) {
                             printf("[%s Task]\n", t[current_i].teamNm);
                             //팀 문서 나열
-
+                            
                             printf("[1. 특정 파일 조회         2. 파일 생성]\n");
                             scanf("%d", &a4);
 
@@ -132,34 +136,48 @@ int main() {
                                 strcat(now, tDay);
                                 strcpy(textName, now);
                                 strcat(textName, "_");
-                                
+                                char *current_teamNm = t[current_i].teamNm;
                                 char *current_name = t[current_i].name;
                                 char *current_position = t[current_i].position;
                                 strcat(textName, current_name);         //사용자 이름 넣어야됨
                                 strcat(textName, current_position);
                                 strcat(textName, "_task.txt");
-                                
-                                /*
-                                strcat(textName, "_");
-                                strcat(textName, "나연경");         //사용자 이름 넣어야됨
-                                strcat(textName, "사원_task.txt");
-                                */
+                               
                                 printf("============================%s\n", textName);
+                                char *all = textName;
 
+                                FILE* allfile;
+                                if ((fopen_s(&allfile, "file.bat", "ab")) != 0) {
+                                    printf("파일 열기 실패\n");
+                                    exit(1);
+                                }
+                                fprintf(allfile, "%s %s\n", current_teamNm, all);
+                                TEAMLIST* teamlist;
+                                teamlist = (TEAMLIST*)malloc(sizeof(TEAMLIST) * 10);
+                                int index = 0;
+                                
+                                free(teamlist);
+                                fclose(allfile);
                                 int size;
                                 int max_task = 200;
                                 char** tasklist;
-                                
+                                                                
                                 FILE* taskfile;
+                               
                                 if ((fopen_s(&taskfile, textName, "w+")) != 0) {
                                     printf("파일 열기 실패\n");
                                     exit(1);
                                 }
+                                
                                 free(textName);
 
+                                TASK ts;
                                 printf("직책 : %s\n", t[current_i].position);
+                                strcpy(ts.position, t[current_i].position);
                                 printf("이름 : %s\n", t[current_i].name);
+                                strcpy(ts.name, t[current_i].name);
                                 printf("날짜 : %s\n", now);
+                                strcpy(ts.now, now);
                                 printf("TASK를 몇개 입력하시겠습니까? : ");
                                 scanf("%d", &size);
                                 tasklist = (char**) malloc(sizeof(char *) * size);
@@ -171,17 +189,27 @@ int main() {
                                     printf("%d .) ", size_i + 1);
                                     scanf_s("%s", tasklist[size_i], sizeof(char)*max_task);
                                 }
-                                fprintf(taskfile, "%s %s %s ", t[current_i].position, t[current_i].name, now);
+                                //구조체 출력
+                                printf("%s\n%s\n%s\n", ts.name, ts.position, ts.now);
                                 for (int size_i = 0; size_i < size; size_i++)
-                                   fprintf(taskfile, "%s ", tasklist[size_i]);
+                                {
+                                    printf("%s\n", tasklist[size_i]);
+                                }
+                                fprintf(taskfile, "직급 : %s\n이름 : %s\n날짜 : %s\nTASK]\n", t[current_i].position, t[current_i].name, now);
+                                for (int size_i = 0; size_i < size; size_i++)
+                                   fprintf(taskfile, "%d.)%s\n", size_i+1, tasklist[size_i]);
                                 //printf("%s\n", tasklist[size_i]);
+
                                 fclose(taskfile);
                                 
                                 free(tasklist);
+
+
                             }
                         }
                     }
                     else if (a2 == 2) {
+                    //current_teamNm => 현재 팀이름
 
                     }
                     else
