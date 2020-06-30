@@ -29,6 +29,7 @@ int main() {
     char* userNm = malloc(sizeof(char) * 50);
     char* userKey = malloc(sizeof(char) * 50);
     FILE* fp;
+    char* nowlist = malloc(sizeof(char) * 50);
 
     if ((fopen_s(&fp, "SecurityKey.txt", "w+")) != 0) {
         printf("파일 열기 실패\n");
@@ -76,14 +77,14 @@ int main() {
             printf("[사용자 정보 입력]\n");
             printf("\n사용자 이름 : ");
             scanf("%s", userNm);
-            printf("%s", teamSecurity);
+            //printf("%s", teamSecurity);
             printf("\n팀 고유키 : ");
             scanf("%s", userKey);
 
             for (ix = 0; ix < 10; ix++) {
                 if (!strcmp(userNm, t[ix].name) && !strcmp(userKey, teamSecurity) || !strcmp(userKey, "aaaa")) {
                     //printf("%d", strcmp(userNm, t[ix].name) && strcmp(userKey, teamSecurity));
-                    
+
                     free(userNm);
                     free(userKey);
                     current_i = ix;
@@ -162,7 +163,7 @@ int main() {
                                         }
                                         index++;
                                     }
-                                   
+
 
                                     printf("[1. 해당 문서 수정         2. 해당 문서 삭제]\n");
                                     scanf("%d", &a5);
@@ -193,7 +194,7 @@ int main() {
                                         int max_task = 200;
                                         char** tasklist;
                                         TASK ts;
-                                        printf("직책 : %s\n", t[current_i].position);
+                                        printf("\n직책 : %s\n", t[current_i].position);
                                         strcpy(ts.position, t[current_i].position);
                                         printf("이름 : %s\n", t[current_i].name);
                                         strcpy(ts.name, t[current_i].name);
@@ -216,9 +217,22 @@ int main() {
 
                                         fclose(taskfile);
                                         free(tasklist);
-                                    }
+                                    } 
                                     fclose(readfile);
+                                    if (a5 == 2) {
+                                        //printf("%s", *nowlist);
+                                        int nResult = remove("2020629_나연경2사원2_task.txt"); //해당 파일을 지운다.
+                                        if (nResult == 0)
+                                        {
+                                            printf("파일을 지웠습니다.\n");  //지우기 성공
+                                        }
+                                        else if (nResult == -1)
+                                        {
+                                            printf("파일을 지우지 못했습니다.\n");  //지우기 실패
+                                            continue;
+                                        }
 
+                                    }
                                 }
 
                                 else if (a4 == 2) {
@@ -296,10 +310,10 @@ int main() {
                                         scanf_s("%s", tasklist[size_i], sizeof(char) * max_task);
                                     }
                                     //구조체 출력
-                                    printf("%s\n%s\n%s\n", ts.name, ts.position, ts.now);
+                                    printf("이름 : %s\n직책 : %s\n날짜 : %s\n", ts.name, ts.position, ts.now);
                                     for (int size_i = 0; size_i < size; size_i++)
                                     {
-                                        printf("%s\n", tasklist[size_i]);
+                                        printf("%d.)%s\n",size_i+1, tasklist[size_i]);
                                     }
                                     fprintf(taskfile, "직급 : %s\n이름 : %s\n날짜 : %s\nTASK]\n", t[current_i].position, t[current_i].name, now);
                                     for (int size_i = 0; size_i < size; size_i++)
@@ -350,7 +364,7 @@ int main() {
                     continue;
                 }
             }
-
+            
         }
     }
 }
